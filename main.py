@@ -22,6 +22,19 @@ def show_menu():
             return int(choice)
         else:
             print("Geen geldige keuze!")
+
+def main():
+    while True:
+        choice = show_menu()
+        if choice == 1:
+            print("Toon de bordspelcollectie")
+        elif choice == 2:
+            print("Voeg een bordspel toe")
+        elif choice == 3:
+            print("Zoek een bordspel")
+        else:
+            print("Goodbye!")
+            break
     
 if __name__ == "__main__":
-    choice = show_menu()
+    main()
