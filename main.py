@@ -5,20 +5,92 @@ Created on Thu Nov  5 10:43:33 2026
 @author: expor
 """
 
+from data_access.database import init_database
+from data_access.game_repository import GameRepository
+from domain.board_game import BoardGame
 from ui.menu import show_menu
 
+def get_valid_integer(prompt):
+    """Continuously prompts the user until a valid integer is entered."""
+    while True:
+        try:
+            return int(input(prompt))
+        except ValueError:
+            print("Invalid input! Please enter a valid whole number.")
+            
 def main():
+    # Initialize the database and tables at startup
+    init_database()
+    print("Welcome to the Board Game Manager!")
+
     while True:
         choice = show_menu()
+        
         if choice == 1:
-            print("Toon de bordspelcollectie")
+            print("\n--- Board Game Collection ---")
+            games = GameRepository.get_all_games()
+            if games:
+                for game in games:
+                    print(f"- {game}")
+            else:
+                print("No board games found in the collection yet.")
+                
         elif choice == 2:
-            print("Voeg een bordspel toe")
+            print("\n--- Add a New Board Game ---")
+            
+            while True:
+                name = input("Enter game name: ").strip()
+                if name:
+                    break
+                print("Game name cannot be empty.")
+            
+            while True:
+                publisher = input("Enter publisher name: ").strip()
+                if publisher:
+                    break
+                print("Publisher name cannot be empty.")
+            
+            min_players = get_valid_integer("Enter minimum players: ")
+            max_players = get_valid_integer("Enter maximum players: ")
+            playing_time = get_valid_integer("Enter playing time (minutes): ")
+            year = get_valid_integer("Enter publication year: ")
+            
+            status = input("Enter status (e.g., Owned, Wishlist): ").strip()
+            if not status:
+                status = "Owned"
+            
+            # Create domain object and save via repository
+            new_game = BoardGame(
+                name=name,
+                publisher=publisher,
+                min_players=min_players,
+                max_players=max_players,
+                playing_time=playing_time,
+                year=year,
+                status=status
+            )
+            GameRepository.add_board_game(new_game)
+            
         elif choice == 3:
-            print("Zoek een bordspel")
+            print("\n--- Search Board Game ---")
+            search_term = input("Enter (part of) the game name to search: ").strip()
+            
+            if not search_term:
+                print("Search term cannot be empty. Please try again.")
+            else:
+                games = GameRepository.search_games(search_term)
+                
+                if games:
+                    print(f"\nFound {len(games)} matching game(s):")
+                    for game in games:
+                        print(f"- {game}")
+                else:
+                    print("No board games found matching your search.")
+            
         else:
-            print("Goodbye!")
+            print("\nThank you for using Board Game Manager. Goodbye!")
             break
-    
+
+
 if __name__ == "__main__":
     main()
