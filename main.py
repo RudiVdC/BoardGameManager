@@ -9,6 +9,7 @@ from data_access.database import init_database
 from data_access.game_repository import GameRepository
 from domain.board_game import BoardGame
 from ui.menu import show_menu
+from service.export_data import export_games_to_csv
 
 def get_valid_integer(prompt):
     """Continuously prompts the user until a valid integer is entered."""
@@ -86,11 +87,43 @@ def main():
                         print(f"- {game}")
                 else:
                     print("No board games found matching your search.")
-            
+        
+        elif choice == 4:
+            print("\n--- Creating CSV Report ---")
+            games = GameRepository.get_all_games()
+        
+            if games:
+                report_name = input(
+                    "Give file name (default: BoardGameManager_Data.csv): "
+                ).strip()
+        
+                try:
+                    if report_name == "":
+                        filename = export_games_to_csv(games)
+                    else:
+                        extension = report_name.split(".")
+
+                        if extension[-1].lower() != "csv":
+                            report_name += ".csv"
+                
+                        filename = export_games_to_csv(games, report_name)
+                
+                    print(f"CSV report successfully created: {filename}")
+        
+                except PermissionError:
+                    print(
+                        "Unable to create the CSV file. "
+                        "Please close the file in Excel and try again."
+                    )
+        
+                except OSError as error:
+                    print(f"An error occurred while creating the CSV file: {error}")
+        
+            else:
+                print("No board games found in the collection yet.")
         else:
             print("\nThank you for using Board Game Manager. Goodbye!")
             break
-
 
 if __name__ == "__main__":
     main()

@@ -6,7 +6,7 @@ Created on Thu Nov  5 11:27:35 2026
 """
 
 def show_menu():
-    options = ["1", "2", "3", "4"]
+    options = ["1", "2", "3", "4", "5"]
     while True:
         print("=================================")
         print("       BOARD GAME MANAGER")
@@ -15,7 +15,9 @@ def show_menu():
         print("1. View board game collection")
         print("2. Add a board game")
         print("3. Search for a board game")
-        print("4. Exit")
+        print("4. Export data to Excel file")
+        print()
+        print("5. Exit")
         print()
         choice = input("Choose an option: ")
         if choice in options:
