@@ -20,3 +20,14 @@ class BoardGame:
 
     def __str__(self):
         return f"{self.name} ({self.year}) - Publisher: {self.publisher}"
+    
+    def get_detailed_info(self):
+        return (
+            f"Name: {self.name}\n"
+            f"Publisher: {self.publisher}\n"
+            f"Minimum players: {self.min_players}\n"
+            f"Maximum players: {self.max_players}\n"
+            f"Playing time: {self.playing_time} min\n"
+            f"Publication year: {self.year}\n"
+            f"Status: {self.status}"
+        )

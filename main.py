@@ -43,20 +43,13 @@ def main():
             
         elif choice == 3:
             print("\n--- Search Board Game ---")
-            search_term = input("Enter (part of) the game name to search: ").strip()
             
-            if not search_term:
-                print("Search term cannot be empty. Please try again.")
-            else:
-                games = GameRepository.search_games(search_term)
-                
-                if games:
-                    print(f"\nFound {len(games)} matching game(s):")
-                    for game in games:
-                        print(f"- {game}")
-                else:
-                    print("No board games found matching your search.")
-        
+            selected_game = select_games()
+            
+            if selected_game:
+                print("\n--- Game Details ---")
+                print(selected_game.get_detailed_info())
+            
         elif choice == 4:
             print("\n--- Update board game details ---")
             selected_game = select_games()
