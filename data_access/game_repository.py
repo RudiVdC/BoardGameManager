@@ -121,3 +121,12 @@ class GameRepository:
             games.append(game)
             
         return games
+    
+    @staticmethod
+    def delete_game(game_id):
+        """Verwijdert een bordspel uit de database op basis van ID."""
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM games WHERE id = ?", (game_id,))
+        conn.commit()
+        conn.close()
