@@ -127,6 +127,33 @@ class GameRepository:
         """Verwijdert een bordspel uit de database op basis van ID."""
         conn = get_connection()
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM games WHERE id = ?", (game_id,))
+        cursor.execute("DELETE FROM board_games WHERE id = ?", (game_id,))
         conn.commit()
         conn.close()
+        
+    @staticmethod
+    def update_game(game):
+        """Updates an existing board game in the database."""
+        publisher_id = GameRepository.add_publisher(Publisher(game.publisher))
+        
+        conn = get_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute("""
+            UPDATE board_games 
+            SET name = ?, publisher_id = ?, min_players = ?, max_players = ?, playing_time = ?, year = ?, status = ?
+            WHERE id = ?
+        """, (
+            game.name,
+            publisher_id,
+            game.min_players,
+            game.max_players,
+            game.playing_time,
+            game.year,
+            game.status,
+            game.id
+        ))
+        
+        conn.commit()
+        conn.close()
+        print(f"Board game '{game.name}' successfully updated in the database!")

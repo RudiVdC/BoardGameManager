@@ -11,6 +11,8 @@ from domain.board_game import BoardGame
 from ui.menu import show_menu
 from service.export_data import export_games_to_csv
 from ui.game_selection import select_games
+from ui.menu_edit_game import show_edit_menu
+from service.edit_data import edit_data
 
 def get_valid_integer(prompt):
     """Continuously prompts the user until a valid integer is entered."""
@@ -90,8 +92,23 @@ def main():
                     print("No board games found matching your search.")
         
         elif choice == 4:
-            print("\n--- Remove a Board Game ---")
+            print("\n--- Update board game details ---")
+            selected_game = select_games()
             
+            if selected_game:
+                while True:
+                    edit_choice = show_edit_menu(selected_game)
+                    
+                    if edit_choice == 8:
+                        GameRepository.update_game(selected_game)
+                        print("Changes saved successfully to the database!")
+                        break
+                    
+                    elif edit_choice is not None:
+                        selected_game = edit_data(edit_choice, selected_game)
+
+        elif choice == 5:
+            print("\n--- Remove a Board Game ---")
             selected_game = select_games()
             
             if selected_game:
@@ -111,7 +128,7 @@ def main():
                     else:
                         print("Invalid choice. Please enter 'y' or 'n'.")
 
-        elif choice == 5:
+        elif choice == 6:
             print("\n--- Creating CSV Report ---")
             games = GameRepository.get_all_games()
         
