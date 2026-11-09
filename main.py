@@ -97,7 +97,7 @@ def main():
                 ).strip()
         
                 try:
-                    if report_name == "":
+                    if not report_name:
                         filename = export_games_to_csv(games)
                     else:
                         extension = report_name.split(".")
