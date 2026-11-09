@@ -10,6 +10,7 @@ from data_access.game_repository import GameRepository
 from domain.board_game import BoardGame
 from ui.menu import show_menu
 from service.export_data import export_games_to_csv
+from ui.game_selection import select_games
 
 def get_valid_integer(prompt):
     """Continuously prompts the user until a valid integer is entered."""
@@ -90,90 +91,25 @@ def main():
         
         elif choice == 4:
             print("\n--- Remove a Board Game ---")
-        
-            # Get all board games from the database
-            all_games = GameRepository.get_all_games()
-        
-            if not all_games:
-                print("No board games found in the database.")
-        
-            else:
-                filtered_games = all_games
-                search_term = ""
-        
+            
+            selected_game = select_games()
+            
+            if selected_game:
                 while True:
-                    print(f"\nCurrent search: '{search_term}'")
-                    print(f"Number of matching games: {len(filtered_games)}")
-        
-                    print("-" * 40)
-        
-                    for index, game in enumerate(filtered_games, start=1):
-                        print(f"[{index}] {game.name} ({game.year})")
-        
-                    print("-" * 40)
-        
-                    action = input(
-                        "Enter letters to filter, a number to select a game, "
-                        "'clear' to reset the search or 'cancel' to cancel: "
-                    ).strip()
-        
-                    if action.lower() == "cancel":
+                    confirmation = input(
+                        f"Are you sure you want to delete "
+                        f"'{selected_game.name}'? (y/n): "
+                    ).strip().lower()
+
+                    if confirmation == "y":
+                        GameRepository.delete_game(selected_game.id)
+                        print(f"'{selected_game.name}' was successfully deleted!")
                         break
-        
-                    elif action.lower() == "clear":
-                        search_term = ""
-                        filtered_games = all_games
-        
-                    elif action == "":
-                        print("Please enter something.")
-        
-                    elif action.isdigit():
-                        choice_index = int(action)
-        
-                        if 1 <= choice_index <= len(filtered_games):
-                            selected_game = filtered_games[choice_index - 1]
-        
-                            # Ask for confirmation
-                            while True:
-                                confirmation = input(
-                                    f"Are you sure you want to delete "
-                                    f"'{selected_game.name}'? (y/n): "
-                                ).strip().lower()
-        
-                                if confirmation == "y":
-                                    GameRepository.delete_game(selected_game.id)
-                                    print(
-                                        f"'{selected_game.name}' was successfully deleted!"
-                                    )
-                                    break
-        
-                                elif confirmation == "n":
-                                    print("Deletion cancelled.")
-                                    break
-        
-                                else:
-                                    print("Invalid choice. Please enter 'y' or 'n'.")
-        
-                            break
-        
-                        else:
-                            print("Invalid number. Please try again.")
-        
+                    elif confirmation == "n":
+                        print("Deletion cancelled.")
+                        break
                     else:
-                        search_term += action
-        
-                        filtered_games = [
-                            game for game in all_games
-                            if search_term.lower() in game.name.lower()
-                        ]
-        
-                        if not filtered_games:
-                            print(
-                                f"No games found matching '{search_term}'. "
-                                "The search has been reset."
-                            )
-                            filtered_games = all_games
-                            search_term = ""
+                        print("Invalid choice. Please enter 'y' or 'n'.")
 
         elif choice == 5:
             print("\n--- Creating CSV Report ---")
