@@ -12,7 +12,7 @@ from ui.menu import show_menu
 from service.export_data import export_games_to_csv
 from ui.game_selection import select_games
 from ui.menu_edit_game import show_edit_menu
-from service.edit_data import edit_data
+from ui.edit_data import edit_data
 
 def main():
     # Initialize the database and tables at startup
