@@ -6,6 +6,8 @@ Created on Fri Nov  6 10:34:57 2026
 """
 
 import csv
+from data_access.game_repository import GameRepository
+from ui.export_menu import get_export_filename
 
 def export_games_to_csv(games_data, filename="BoardGameManager_Data.csv"):
     """
@@ -27,3 +29,25 @@ def export_games_to_csv(games_data, filename="BoardGameManager_Data.csv"):
             ])
 
     return filename
+
+def create_csv_report():
+    games = GameRepository.get_all_games()
+
+    if not games:
+        print("No board games found in the collection yet.")
+        return
+
+    filename = get_export_filename()
+
+    try:
+        filename = export_games_to_csv(games, filename)
+        print(f"CSV report successfully created: {filename}")
+
+    except PermissionError:
+        print(
+            "Unable to create the CSV file. "
+            "Please close the file in Excel and try again."
+        )
+
+    except OSError as error:
+        print(f"An error occurred while creating the CSV file: {error}")
