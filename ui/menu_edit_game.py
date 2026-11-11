@@ -6,7 +6,7 @@ Created on Mon Nov  9 14:22:48 2026
 """
 
 def show_edit_menu(game):
-    options = ["1", "2", "3", "4", "5", "6", "7", "8"]
+    options = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
     while True:
         print("=======================")
         print("=   Current Details   =")
@@ -30,8 +30,9 @@ def show_edit_menu(game):
         print("[7] Status")
         print()
         print("[8] Save changes and return")
+        print("[9] Cancel without saving")
         print()
-        choice = input("Choose an option: ")
+        choice = input("Choose an option: ").strip()
         if choice in options:
             return int(choice)
         else:

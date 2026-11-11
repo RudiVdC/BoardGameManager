@@ -23,7 +23,7 @@ def main():
         choice = show_menu()
         
         if choice == 1:
-            print("\n--- Board Game Collection ---")
+            print("\n--- Board Game Collection ---\n")
             games = GameRepository.get_all_games()
             if games:
                 sorted_games = sorted(games, key=lambda g: g.name.lower())
@@ -53,16 +53,20 @@ def main():
         elif choice == 4:
             print("\n--- Update board game details ---")
             selected_game = select_games()
-            
+        
             if selected_game:
                 while True:
                     edit_choice = show_edit_menu(selected_game)
-                    
+        
                     if edit_choice == 8:
                         GameRepository.update_game(selected_game)
                         print("Changes saved successfully to the database!")
                         break
-                    
+        
+                    elif edit_choice == 9:
+                        print("Changes discarded. No changes were saved.")
+                        break
+        
                     elif edit_choice is not None:
                         selected_game = edit_data(edit_choice, selected_game)
 

@@ -153,7 +153,9 @@ class GameRepository:
             game.status,
             game.id
         ))
-        
+        if cursor.rowcount > 0:
+            print(f"Board game '{game.name}' successfully updated in the database!")
+        else:
+            print("No board game was updated.")
         conn.commit()
         conn.close()
-        print(f"Board game '{game.name}' successfully updated in the database!")

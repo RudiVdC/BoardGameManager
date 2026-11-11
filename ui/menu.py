@@ -17,7 +17,7 @@ def show_menu():
         print("3. Search for a board game")
         print("4. Update board game details")
         print("5. Remove a board game from your collection")
-        print("6. Export data to Excel file")
+        print("6. Export data to CSV file")
         print()
         print("7. Exit")
         print()

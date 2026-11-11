@@ -6,6 +6,7 @@ Created on Mon Nov  9 15:33:52 2026
 """
 from ui.helpers import get_valid_integer
 from domain.board_game import BoardGame, VALID_STATUSES
+from service.game_validation import is_positive_number, is_valid_player_range
 
 def get_game_data():
     while True:
@@ -20,11 +21,32 @@ def get_game_data():
             break
         print("Publisher name cannot be empty.")
     
-    min_players = get_valid_integer("Enter minimum players: ")
-    max_players = get_valid_integer("Enter maximum players: ")
-    playing_time = get_valid_integer("Enter playing time (minutes): ")
-    year = get_valid_integer("Enter publication year: ")
+    while True:
+        min_players = get_valid_integer("Enter minimum players: ")
+        max_players = get_valid_integer("Enter maximum players: ")
+
+        if is_valid_player_range(min_players, max_players):
+            break
+
+        print("Invalid player range! Minimum players must be positive "
+              "and cannot be greater than maximum players.")
+
+    while True:
+        playing_time = get_valid_integer("Enter playing time (minutes): ")
+
+        if is_positive_number(playing_time):
+            break
+
+        print("Playing time must be greater than zero.")
+
+    while True:
+        year = get_valid_integer("Enter publication year: ")
     
+        if is_positive_number(year):
+            break
+        else:
+            print("Publication year must be greater than zero.")
+
     while True:
         print("\nAvailable statuses:")
         for index, s in enumerate(VALID_STATUSES, start=1):
@@ -33,7 +55,7 @@ def get_game_data():
         choice = input("Choose a status number (default 1 - Owned): ").strip()
         
         if not choice:
-            status = VALID_STATUSES[0]  # "Owned"
+            status = VALID_STATUSES[0]
             break
         elif choice.isdigit() and 1 <= int(choice) <= len(VALID_STATUSES):
             status = VALID_STATUSES[int(choice) - 1]
